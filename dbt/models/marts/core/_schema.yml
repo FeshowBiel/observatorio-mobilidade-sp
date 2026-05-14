@@ -30,13 +30,15 @@ models:
       - name: latitude
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: -24.0
-              max_value: -23.0
+              arguments:
+                min_value: -24.0
+                max_value: -23.0
       - name: longitude
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: -47.0
-              max_value: -46.0
+              arguments:
+                min_value: -47.0
+                max_value: -46.0
 
   - name: fct_viagens
     description: "Fato de segmentos de viagem com velocidade calculada"
@@ -47,6 +49,6 @@ models:
       - name: velocidade_kmh
         tests:
           - dbt_expectations.expect_column_values_to_be_between:
-              min_value: 1
-              max_value: 120
-              mostly: 0.95
+              arguments:
+                min_value: 1
+                max_value: 120
