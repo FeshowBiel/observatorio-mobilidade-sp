@@ -5,7 +5,7 @@ import streamlit as st
 import folium
 from streamlit_folium import st_folium
 
-from dashboard.utils.db_queries import carregar_posicoes_recentes
+from utils.db_queries import carregar_posicoes_recentes
 
 st.set_page_config(page_title="Mapa Operacional", page_icon="🗺️", layout="wide")
 st.title("🗺️ Mapa Operacional — Posições em Tempo Real")

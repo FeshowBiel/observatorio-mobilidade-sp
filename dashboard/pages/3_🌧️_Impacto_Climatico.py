@@ -5,7 +5,7 @@ import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-from dashboard.utils.db_queries import carregar_correlacao_clima
+from utils.db_queries import carregar_correlacao_clima
 
 st.set_page_config(page_title="Impacto Climático", page_icon="🌧️", layout="wide")
 st.title("🌧️ Impacto Climático na Velocidade")
