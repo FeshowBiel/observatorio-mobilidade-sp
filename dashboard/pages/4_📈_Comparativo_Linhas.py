@@ -1,7 +1,10 @@
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 import streamlit as st
 import plotly.express as px
 
-from dashboard.utils.db_queries import carregar_pontualidade_diaria
+from utils.db_queries import carregar_pontualidade_diaria
 
 st.set_page_config(page_title="Comparativo de Linhas", page_icon="📈", layout="wide")
 st.title("📈 Comparativo entre Linhas")

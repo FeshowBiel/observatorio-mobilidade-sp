@@ -1,5 +1,10 @@
 """Queries para o dashboard, com cache."""
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
+# Carrega .env do root do projeto (dois níveis acima de utils/)
+load_dotenv(Path(__file__).parent.parent.parent / ".env")
 
 import pandas as pd
 import streamlit as st

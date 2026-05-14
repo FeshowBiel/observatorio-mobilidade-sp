@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.insert(0, os.path.dirname(__file__))
+
 import streamlit as st
 
 st.set_page_config(
@@ -17,7 +21,7 @@ no transporte coletivo da cidade de São Paulo.
 
 st.divider()
 
-from dashboard.utils.db_queries import get_summary_metrics
+from utils.db_queries import get_summary_metrics
 
 metrics = get_summary_metrics()
 
