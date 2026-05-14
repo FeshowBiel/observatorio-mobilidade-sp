@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: raw
+    database: observatorio
+    schema: raw
+    tables:
+      - name: olho_vivo_posicoes
+        description: "Posições brutas coletadas da API Olho Vivo a cada ~15min"
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: codigo_linha
+            tests:
+              - not_null
+          - name: hora_referencia
+            tests:
+              - not_null
+
+      - name: olho_vivo_linhas
+        description: "Cadastro de linhas coletado 1x/dia da API Olho Vivo"
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: codigo_linha
+            tests:
+              - not_null
+
+      - name: weather_horario
+        description: "Dados de clima horário do Open-Meteo para São Paulo"
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+          - name: hora_referencia
+            tests:
+              - unique
+              - not_null

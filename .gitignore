@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+
+# Distribuição
+build/
+dist/
+*.egg-info/
+
+# Testes/Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Variáveis de ambiente
+.env
+.env.local
+*.secret
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+dbt/profiles.yml
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Dados locais
+data/raw/
+data/processed/
+*.parquet
+*.csv.gz
+
+# Power BI temp
+*.pbix.lock

@@ -1,0 +1,36 @@
+name: Ingest Olho Vivo
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # a cada 15 minutos
+  workflow_dispatch:           # permite rodar manualmente
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Ingest bus positions
+        env:
+          SPTRANS_TOKEN: ${{ secrets.SPTRANS_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: python -m ingestion.jobs.ingest_olho_vivo
+
+      - name: Ingest weather
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          WEATHER_LAT: "-23.5505"
+          WEATHER_LON: "-46.6333"
+        run: python -m ingestion.jobs.ingest_weather
+        # Roda a cada hora (os outros 3 de 4 ticks são no-op via UPSERT)

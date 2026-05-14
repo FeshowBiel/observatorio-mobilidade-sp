@@ -1,0 +1,58 @@
+name: dbt Daily Run
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC = 03:00 BRT
+  workflow_dispatch:
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dbt
+        run: pip install dbt-postgres==1.8.2
+
+      - name: Create dbt profiles
+        env:
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          observatorio:
+            target: prod
+            outputs:
+              prod:
+                type: postgres
+                host: "${POSTGRES_HOST}"
+                port: 5432
+                user: "${POSTGRES_USER}"
+                password: "${POSTGRES_PASSWORD}"
+                dbname: "${POSTGRES_DB}"
+                schema: marts
+                threads: 4
+                sslmode: require
+          EOF
+
+      - name: dbt deps
+        working-directory: dbt
+        run: dbt deps
+
+      - name: dbt run
+        working-directory: dbt
+        run: dbt run --target prod
+
+      - name: dbt test
+        working-directory: dbt
+        run: dbt test --target prod

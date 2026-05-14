@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: dim_tempo
+    description: "Dimensão de tempo com granularidade diária"
+    columns:
+      - name: data_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_linha
+    description: "Dimensão de linhas de ônibus"
+    columns:
+      - name: codigo_linha
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_posicoes
+    description: "Fato de posições GPS dos veículos"
+    columns:
+      - name: posicao_id
+        tests:
+          - unique
+          - not_null
+      - name: codigo_linha
+        tests:
+          - not_null
+      - name: latitude
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: -24.0
+              max_value: -23.0
+      - name: longitude
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: -47.0
+              max_value: -46.0
+
+  - name: fct_viagens
+    description: "Fato de segmentos de viagem com velocidade calculada"
+    columns:
+      - name: posicao_id
+        tests:
+          - not_null
+      - name: velocidade_kmh
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1
+              max_value: 120
+              mostly: 0.95
