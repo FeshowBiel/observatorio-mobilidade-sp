@@ -83,10 +83,26 @@ def carregar_correlacao_clima() -> pd.DataFrame:
 
 @st.cache_data(ttl=60)
 def carregar_posicoes_recentes(minutos: int = 15) -> pd.DataFrame:
+    # Tenta janela solicitada; se vazia, pega o snapshot mais recente disponível
     query = f"""
-        select latitude, longitude, codigo_linha, prefixo_veiculo, hora_referencia
+        with ultima_coleta as (
+            select max(coletado_em) as ts from marts.fct_posicoes
+        ),
+        janela as (
+            select coletado_em from marts.fct_posicoes
+            where coletado_em >= now() - interval '{minutos} minutes'
+            limit 1
+        )
+        select latitude, longitude, codigo_linha, prefixo_veiculo,
+               hora_referencia, coletado_em
         from marts.fct_posicoes
-        where coletado_em >= now() - interval '{minutos} minutes'
+        where
+            -- se há dados na janela solicitada, usa ela
+            case when (select count(*) from janela) > 0
+                 then coletado_em >= now() - interval '{minutos} minutes'
+            -- senão, pega o snapshot mais recente disponível
+                 else coletado_em = (select ts from ultima_coleta)
+            end
         limit 5000
     """
     return pd.read_sql(query, get_engine())
