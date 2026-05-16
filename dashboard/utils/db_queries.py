@@ -3,8 +3,16 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-# Carrega .env do root do projeto (dois níveis acima de utils/)
-load_dotenv(Path(__file__).parent.parent.parent / ".env")
+
+# Tenta carregar .env de vários locais possíveis
+for _candidate in [
+    Path(__file__).parent.parent.parent / ".env",  # dashboard/utils/ -> raiz
+    Path(__file__).parent.parent / ".env",          # dashboard/ -> raiz
+    Path.cwd() / ".env",                            # diretório atual
+]:
+    if _candidate.exists():
+        load_dotenv(_candidate)
+        break
 
 import pandas as pd
 import streamlit as st
